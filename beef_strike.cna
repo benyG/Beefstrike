@@ -526,22 +526,22 @@ popup geo_hook {
 }
 on host_add {}
 # The heart beat of BeefStrike, specify the frequency of each update : zombi online and offline list, zombi importation
-on heartbeat_5s {
+on heartbeat_7s {
 	zombiupdate();
 	}
 
 #check api key availability
-on heartbeat_60s {
+on heartbeat_77s {
 	if ($key eq "00000000000000000000000" ){ append($console, "\c4[!]No Key available");}
 	if ($key eq "" ){ append($console, "\c4[!]No Key available");}
 	if ($key eq " " ){ append($console, "\c4[!]No Key available");}
 	}
 #update logs
-on heartbeat_15s {
+on heartbeat_60s {
 	logupdate();
 	}
 # free memory	
-on heartbeat_600s {
+on heartbeat_300s {
 	[System gc] ;
 	}
 	
