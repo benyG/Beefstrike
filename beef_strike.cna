@@ -250,7 +250,7 @@ popup beefstrike {
 				}
 			item "ARE-Builder" {
 				local('$rules');
-				$rules = open_table_tab("Rule Builder", "", @("id", "Rule_name", "Rule_author", "Rule_browser", "Rule_browser_vers", "Rule_os", "Rule_os_vers", "exec_order", "exec_delay", "chain_mode"), @(), @("Create ARE-Rule", "-Refresh-", "Build", "Publish"), "", 1);
+				$rules = open_table_tab("Rule Builder", "", @("id", "Rule_name", "Rule_author", "Rule_browser", "Rule_browser_vers", "Rule_os", "Rule_os_vers", "exec_order", "exec_delay", "chain_mode"), @(), @("Create ARE-Rule", "-Refresh-", "Build", "Publish", "Commands list"), "", 1);
 				refresh_rules($rules);
 				}
 			}
@@ -1109,7 +1109,7 @@ on tab_table_click {
 	}
 	if ($3 eq "Commands list") {
 		local('$commandtab');
-		$commandtab = open_table_tab("Commands", "", @("id","name","category"), @(), @("Fill it", "See autorun list"), "cmde_hook", 1);
+		$commandtab = open_table_tab("Commands", "", @("id","name","category","description"), @(), @("Fill it", "See autorun list"), "cmde_hook", 1);
 		fill_cmde_tab($commandtab);
 	}
 	if ($3 eq "-Refresh-") {
@@ -2454,11 +2454,12 @@ sub rules_builder {
 	$exec_order  = @rule_build[$1]["exec_order"];
 	$exec_delay = @rule_build[$1]["exec_delay"];
 	$chain_mode = @rule_build[$1]["chain_mode"];
-	$addtext = " \\\"name\\\": \\\"" . $Rule_name . "\\\", \\\"author\\\": \\\"" . $Rule_author . "\\\",  \\\"browser\\\": \\\"" . $Rule_browser . "\\\", \\\"browser_version\\\": \\\"" . $Rule_browser_vers . "\\\", \\\"os\\\": \\\"" . $Rule_os . "\\\", \\\"os_version\\\": \\\"" . $Rule_os_vers . "\\\", \\\"modules\\\": [\n" ;
+	$addtext = " \\\"name\\\": \\\"" . $Rule_name . "\\\", \\\"author\\\": \\\"" . $Rule_author . "\\\",  \\\"browser\\\": \\\"" . $Rule_browser . "\\\", \\\"browser_version\\\": \\\"" . $Rule_browser_vers . "\\\", \\\"os\\\": \\\"" . $Rule_os . "\\\", \\\"os_version\\\": \\\"" . $Rule_os_vers . "\\\", \\\"modules\\\": [" ;
 	$texttosave = "". $texttosave . "" . $addtext . ""; 
 	for ($i = 0; $i < size(@beef_autorun); $i++ ) {
 		if (@beef_autorun[$i]["category"] eq "" . $Rule_name . "" ) {
-			$name = @beef_autorun[$i]["name"] ;
+			$id = @beef_autorun[$i]["id"] ;
+			$name = @beef_cmde[$i]["name"] ;
 			$Param = @beef_autorun[$i]["Param"] ;
 			$Condition = @beef_autorun[$i]["Condition"] ;
 			$Code = @beef_autorun[$i]["Code"] ;
@@ -2501,7 +2502,6 @@ sub rules_list {
 		$are_request = "curl "  . $link . "";
 		append($console, "\n\c9[+] list of ARE-rule enabled:");
 		cmd($console , "$are_request");
-	
 		$getare = [BeefRequester BeefGetRequest: "$link"]; sleep(50);
 		$aresize = [AreRulesList AreRules_size: "$getare"]; sleep(50);
 		for ($i = 0; $i < $aresize; $i++){
