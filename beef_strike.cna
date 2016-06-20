@@ -300,7 +300,7 @@ popup beefstrike {
 				cmd($console, "$webrtc"); 
 				}				
 			}
-		item "DDoS " {
+	menu "DDoS " {
 			item "GET" {
 				if ($key ne "00000000000000000000000" || $key ne "" ){
 				$ddostarget = prompt_text("Targeted Website","http://");
